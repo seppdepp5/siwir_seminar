@@ -6,13 +6,14 @@
 #include "Array.hh"
 #include "Types.hh"
 #include "Smoother.hh"
+#include "Stencil.hh"
 
 class MGSolver
 {
 	public:
 	
 		// will allocate memory for all needed arrays
-		MGSolver ( int levels, Smoother & smoother );
+		MGSolver( int levels, Smoother & smoother);
 		~MGSolver();
 
 		// initializes rhs and initial values for ex01
@@ -21,10 +22,7 @@ class MGSolver
 		void initialize_random();
 
 		// performes times v-cycles
-		void v_cycle ( int pre_smooth,
-                       int post_smooth,
-                       int times
-                     );
+		void v_cycle ( int pre_smooth, int post_smooth, int times);
 		int saveToFile(std::string filename) const;
 
 
@@ -41,40 +39,19 @@ class MGSolver
 
 		Smoother smoother_;
 
-		void apply_operator_2d_poisson ( Array & source, Array & target );
+		void apply_operator_2d_poisson( Array &source, Array &target);
 
-		void v_cycle_pvt ( int pre_smooth,
-                           int post_smooth,
-                           int level			// solve when level == 1
-                         );
+		void v_cycle_pvt( int pre_smooth, int post_smooth, int level);
 
-		void compose_right_hand_side ( Array & u,  
-                                       Array & f,
-                                       Array & r_2h,
-                                       int current_level,
-                                       real h           
-                                     );
+		void compose_right_hand_side( Array &u, Array &f, Array &r_2h, int current_level, real h);
 
-		void error_correction ( Array & u,
-                                Array & e_2h,
-                                int current_level
-                              );
+		void error_correction( Array &u, Array & e_2h, int current_level);
 
-		real residual_2d ( Array & u,
-                           Array & f,
-                           real h
-                         );
+		real residual_2d( Array &u, Array &f, real h);
 		
-		void restrict_2d ( Array & u,
-                             Array & u_2h);
+		void restrict_2d ( Stencil &rest, Array &u, Array &u_2h);
 
-		real error_L2 ( Array & approximation,
-                            Array & solution,
-                            real h
-                          )	;
-
-
-
+		real error_L2 ( Array &approximation, Array &solution, real h);
 };
 
 #endif

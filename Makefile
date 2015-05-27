@@ -4,7 +4,7 @@ LDFLAGS = #-lm -pthread
 OBJDIR = ./objects
 SRCDIR = ./src/
 
-OBJ = $(addprefix $(OBJDIR)/, MGSolver.o Smoother2.o Array.o Debug.o main.o )
+OBJ = $(addprefix $(OBJDIR)/, MGSolver.o Smoother.o Array.o Debug.o Stencil.o main.o )
 
 make: $(OBJ)
 	$(CC) $(CFLAGS) -o mgsolve $(OBJ)

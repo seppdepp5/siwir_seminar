@@ -1,12 +1,12 @@
 #include <iostream>
+#include <sys/time.h>
 #include "MGSolver.hh"
 #include "Smoother.hh"
 #include "Timer.hh"
-#include <sys/time.h>
+#include "Stencil.hh"
 
 
-	int 
-main(int argc, char **args)
+int main(int argc, char **args)
 {
 	if(argc != 3){
 		std::cout << "Usage: ./mgsolve <number_of_levels> <number_of_V-cycles>" << std::endl;
