@@ -67,24 +67,26 @@ void MGSolver::initialize_assignment_01 ()
 	int xright = finest_grid->getSize(DIM_1D) * 0.5;
 	int yleft = finest_grid->getSize(DIM_2D) * (-0.5);
 	int yright = finest_grid->getSize(DIM_2D) * 0.5;
+	int xsize =  finest_grid->getSize(DIM_1D) * 0.5;
+	int ysize =  finest_grid->getSize(DIM_2D) * 0.5;
 
 	//bottom and upper
 	for (int col = xleft;col < xright;col++)
 	{
-		finest_grid->operator()(col, finest_grid->getSize(DIM_2D)-1) = sqrt(h*h + col*h*col*h) * (sin(0.5 * atan2(col*h,(-1)*h)));
-		finest_grid->operator()(col, finest_grid->getSize(DIM_2D)-1) = sqrt(h*h + col*h*col*h) * (sin(0.5 * atan2(col*h,h)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(col*h,(-1)*h)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(col*h,h)));
 	}
 
 	//left and right
 	for (int row = yleft;row < yright;row++)
 	{
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row) = sqrt(row*row*h*h + h*h) * (sin(0.5 * atan2(h*(-1),h*row)));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row) = sqrt(row*row*h*h + h*h) * (sin(0.5 * atan2(h,h*row)));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*(-1),h*row)));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h,h*row)));
 	}
 
 	for(int col = 0; col < xright; col++)
 	{	
-		finest_grid->operator()(col, finest_grid->getSize(DIM_2D)-1) = sqrt(col*h*col*h) * (sin(0.5 * atan2(col*h,0)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * (sin(0.5 * atan2(col*h,0)));
 	}
 
 	// initialize solution
