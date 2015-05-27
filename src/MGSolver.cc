@@ -73,20 +73,20 @@ void MGSolver::initialize_assignment_01 ()
 	//bottom and upper
 	for (int col = xleft;col < xright;col++)
 	{
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2((-1)*h,h*col)));
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(h,h*col)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 1))));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 1))));
 	}
 
 	//left and right
 	for (int row = ydown;row < yup;row++)
 	{
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*row,h*(-1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*row,h)));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h*row*h + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h*row*h + 1))));
 	}
 
 	for(int col = 0; col < xright; col++)
 	{	
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * (sin(0.5 * atan2(0,col*h)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 0))));
 	}
 
 	// initialize solution
@@ -96,7 +96,7 @@ void MGSolver::initialize_assignment_01 ()
 	{
 		for (int col = xleft; col < xright; col++)
 		{
-			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h*row*h + col*h*col*h)) * (sin(0.5 * atan2(row*h,col*h)));
+			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h*row*h + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + row*h*row*h))));
 			
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
