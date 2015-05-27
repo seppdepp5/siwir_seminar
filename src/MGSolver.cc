@@ -65,36 +65,38 @@ void MGSolver::initialize_assignment_01 ()
 	real h              = h_intervals_.back();
 	int xleft = finest_grid->getSize(DIM_1D) * (-0.5);
 	int xright = finest_grid->getSize(DIM_1D) * 0.5;
-	int yleft = finest_grid->getSize(DIM_2D) * (-0.5);
-	int yright = finest_grid->getSize(DIM_2D) * 0.5;
+	int ydown = finest_grid->getSize(DIM_2D) * (-0.5);
+	int yup = finest_grid->getSize(DIM_2D) * 0.5;
 	int xsize =  finest_grid->getSize(DIM_1D) * 0.5;
 	int ysize =  finest_grid->getSize(DIM_2D) * 0.5;
 
 	//bottom and upper
 	for (int col = xleft;col < xright;col++)
 	{
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(col*h,(-1)*h)));
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(col*h,h)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2((-1)*h,h*col)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(h*h + col*h*col*h)) * (sin(0.5 * atan2(h,h*col)));
 	}
 
 	//left and right
-	for (int row = yleft;row < yright;row++)
+	for (int row = ydown;row < yup;row++)
 	{
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*(-1),h*row)));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h,h*row)));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*row,h*(-1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + h*h)) * (sin(0.5 * atan2(h*row,h)));
 	}
 
 	for(int col = 0; col < xright; col++)
 	{	
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * (sin(0.5 * atan2(col*h,0)));
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * (sin(0.5 * atan2(0,col*h)));
 	}
 
 	// initialize solution
-	for (int row = 0; row < solution_->getSize(DIM_2D); row++)
+
+	//solution  im array
+	for (int row = ydown; row < yup; row++)
 	{
-		for (int col = 0; col < solution_->getSize(DIM_1D); col++)
+		for (int col = xleft; col < xright; col++)
 		{
-			solution_->operator()(col, row) = sqrt(row*h*row*h + col*h*col*h) * (sin(0.5 * atan2(col*h,row*h)));
+			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h*row*h + col*h*col*h)) * (sin(0.5 * atan2(row*h,col*h)));
 			
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
