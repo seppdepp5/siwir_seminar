@@ -63,44 +63,57 @@ void MGSolver::initialize_assignment_01 ()
 
 	Array * finest_grid = v_grids_.back();
 	real h              = h_intervals_.back();
-	int xleft = finest_grid->getSize(DIM_1D) * (-0.5);
-	int xright = finest_grid->getSize(DIM_1D) * 0.5;
-	int ydown = finest_grid->getSize(DIM_2D) * (-0.5);
-	int yup = finest_grid->getSize(DIM_2D) * 0.5;
-	int xsize =  finest_grid->getSize(DIM_1D) * 0.5;
-	int ysize =  finest_grid->getSize(DIM_2D) * 0.5;
+	int xleft = (finest_grid->getSize(DIM_1D)-1) * (-0.5);
+	int xright = (finest_grid->getSize(DIM_1D)-1) * 0.5;
+	int ydown = (finest_grid->getSize(DIM_2D)-1) * (-0.5);
+	int yup = (finest_grid->getSize(DIM_2D)-1) * 0.5;
+	int xsize =  (finest_grid->getSize(DIM_1D)-1) * 0.5;
+	int ysize =  (finest_grid->getSize(DIM_2D)-1) * 0.5;
+	double h2=h*2;
 
 	//bottom and upper
-	for (int col = xleft;col < xright;col++)
+	for (int col = 0;col >= xleft;col--)
 	{
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 1))));
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 1))));
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+	}
+	for (int col = 0;col <= xright;col++)
+	{
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 
 	//left and right
-	for (int row = ydown;row < yup;row++)
+	for (int row = 0;row >= ydown;row--)
 	{
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h*row*h + 1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h*h + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h*row*h + 1))));
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
+	for (int row = 0;row <= yup;row++)
+	{
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h2*row*h2 + 1))));
+	}
+/*
 
-	for(int col = 0; col < xright; col++)
+	for(int col = 0; col <= xright; col++)
 	{	
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + 0))));
+		finest_grid->operator()(col + xsize, (finest_grid->getSize(DIM_2D)-1)/2) = sqrt(sqrt(col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + 0))));
 	}
-
+*/
 	// initialize solution
 
 	//solution  im array
-	for (int row = ydown; row < yup; row++)
+	for (int row = ydown; row <= yup; row++)
 	{
-		for (int col = xleft; col < xright; col++)
+		for (int col = xleft; col <= xright; col++)
 		{
-			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h*row*h + col*h*col*h)) * sqrt(0.5*(1 - (col*h/sqrt(col*h*col*h + row*h*row*h))));
+			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 			
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
+	
 }
 
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
@@ -319,17 +332,18 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 int MGSolver::saveToFile(std::string filename) const
 {
 	Array *u = v_grids_.back();
+//	Array *u = solution_;
 	//	std::cout << "width: " << u->getSize(DIM_1D) << std::endl;
 
 	std::ofstream gnuFile(filename);
 	if (gnuFile.is_open())
 	{
 		gnuFile << "# x y u(x,y)" << "\n";
-		for (int j = u->getSize(DIM_2D) - 1; j >= 0; j--)
+		for (int j = 0.5*(u->getSize(DIM_2D) - 1); j >= -0.5*(u->getSize(DIM_2D)-1); j--)
 		{
-			for (int i = 0; i < u->getSize(DIM_1D); i++)
+			for (int i = -0.5*(u->getSize(DIM_1D) - 1); i < 0.5*(u->getSize(DIM_1D)) ; i++)
 			{
-				gnuFile << (double) i/(u->getSize(DIM_1D)-1) << " " << (double) j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i,j) << "\n";
+				gnuFile << (double) 2*i/(u->getSize(DIM_1D)-1) << " " << (double) 2*j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i + 0.5*(u->getSize(DIM_1D) - 1) , j + 0.5*(u->getSize(DIM_2D) - 1) ) << "\n";
 			}
 			gnuFile << "\n";
 		}
