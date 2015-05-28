@@ -94,13 +94,13 @@ void MGSolver::initialize_assignment_01 ()
 		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h2*row*h2 + 1))));
 		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
-/*
 
-	for(int col = 0; col <= xright; col++)
+
+	for(int col = 1; col <= xright; col++)
 	{	
 		finest_grid->operator()(col + xsize, (finest_grid->getSize(DIM_2D)-1)/2) = sqrt(sqrt(col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + 0))));
 	}
-*/
+
 	// initialize solution
 
 	//solution  im array
