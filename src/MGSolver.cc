@@ -15,6 +15,7 @@
 
 #define PRINT_ERROR (1)
 #define PRINT_RESIDUAL (1)
+#define LERROR 9.18e-5
 
 	MGSolver::MGSolver ( int levels, Smoother & smoother )
 	: levels_ (levels)
@@ -96,9 +97,10 @@ void MGSolver::initialize_assignment_01 ()
 	}
 
 
-	for(int col = 1; col <= xright; col++)
-	{	
-		finest_grid->operator()(col + xsize, (finest_grid->getSize(DIM_2D)-1)/2) = sqrt(sqrt(col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + 0))));
+	for(int col = 0; col <= xright; col++)
+	{
+		std::cout << "col: " << col << " col+xsize: " << col+xsize << " ysize: " << ysize << std::endl;	
+		finest_grid->operator()(col + xsize, ysize) = 0.0;
 	}
 
 	// initialize solution
@@ -120,19 +122,22 @@ void MGSolver::initialize_assignment_01 ()
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 {
 
-	for (int i = 0; i < times; i++)
+	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
+	//int i = 0;
+//	while(error > LERROR)
+	for(int i = 1; i <= 10; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 #if PRINT_RESIDUAL
 		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
 		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
-
-	} 
+		error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
+	//	i++;
 #if PRINT_ERROR
-	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
 	std::cout << "Error: "  << error << std::endl;
 #endif
+	}
 
 
 }
@@ -332,8 +337,8 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 
 int MGSolver::saveToFile(std::string filename) const
 {
-//	Array *u = v_grids_.back();
-	Array *u = solution_;
+	Array *u = v_grids_.back();
+//	Array *u = solution_;
 	//	std::cout << "width: " << u->getSize(DIM_1D) << std::endl;
 
 	std::ofstream gnuFile(filename);
