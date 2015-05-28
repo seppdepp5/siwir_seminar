@@ -108,6 +108,7 @@ void MGSolver::initialize_assignment_01 ()
 	{
 		for (int col = xleft; col <= xright; col++)
 		{
+			if(col == 0 && row == 0){ solution_->operator()(col+xsize,row+ysize) = 0.0; continue;}
 			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 			
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
@@ -331,8 +332,8 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 
 int MGSolver::saveToFile(std::string filename) const
 {
-	Array *u = v_grids_.back();
-//	Array *u = solution_;
+//	Array *u = v_grids_.back();
+	Array *u = solution_;
 	//	std::cout << "width: " << u->getSize(DIM_1D) << std::endl;
 
 	std::ofstream gnuFile(filename);
