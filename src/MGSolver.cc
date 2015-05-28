@@ -15,7 +15,7 @@
 
 #define PRINT_ERROR (1)
 #define PRINT_RESIDUAL (1)
-#define LERROR 9.18e-5
+#define LERROR 9.2e-5
 
 	MGSolver::MGSolver ( int levels, Smoother & smoother )
 	: levels_ (levels)
@@ -99,7 +99,6 @@ void MGSolver::initialize_assignment_01 ()
 
 	for(int col = 0; col <= xright; col++)
 	{
-		std::cout << "col: " << col << " col+xsize: " << col+xsize << " ysize: " << ysize << std::endl;	
 		finest_grid->operator()(col + xsize, ysize) = 0.0;
 	}
 
@@ -123,9 +122,9 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 {
 
 	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
-	//int i = 0;
-//	while(error > LERROR)
-	for(int i = 1; i <= 10; i++)
+	int i = 0;
+	while(error > LERROR)
+//	for(int i = 1; i <= 10; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 #if PRINT_RESIDUAL
@@ -133,7 +132,7 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
 		error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
-	//	i++;
+		i++;
 #if PRINT_ERROR
 	std::cout << "Error: "  << error << std::endl;
 #endif
