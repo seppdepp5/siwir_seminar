@@ -43,7 +43,7 @@ int main(int argc, char **args)
 	solver.v_cycle(2, 1, n);
 
 	gettimeofday(&t, NULL);
-	std::cout << "Wall clock time of MG execution: " << ((int64_t) (t.tv_sec - t0.tv_sec) * (int64_t)1000000 + 					(int64_t)t.tv_usec - (int64_t)t0.tv_usec) * 1e-3 << " ms" << std::endl;
+	std::cout << "Wall clock time of MG execution: " << ((int64_t) (t.tv_sec - t0.tv_sec) * (int64_t)1000000 + (int64_t)t.tv_usec - (int64_t)t0.tv_usec) * 1e-3 << " ms" << std::endl;
 
 	solver.saveToFile("solution.txt");
 
