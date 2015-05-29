@@ -73,16 +73,16 @@ void MGSolver::initialize_assignment_01 ()
 	double h2	= h*2;
 
 	//bottom and upper
-	for (int col = 0;col >= xleft;col--)
+	for (int col = -1;col >= xleft;col--)
 	{
-		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,(col*h2)));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,(col*h2)));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
-	for (int col = 0;col <= xright;col++)
+	for (int col = 1;col <= xright;col++)
 	{
 		//hier
-		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,(col*h2)));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,(col*h2)));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 
 	//left and right
@@ -104,6 +104,8 @@ void MGSolver::initialize_assignment_01 ()
 		finest_grid->operator()(col + xsize, row + ysize) = 0.0;//sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 	}
 	finest_grid->operator()(xsize, ysize) = 0.0;
+	finest_grid->operator()(xsize, finest_grid->getSize(DIM_2D)-1) = 1/sqrt(2);
+	finest_grid->operator()(xsize, 0) = 1/sqrt(2);
 /*
 	// initialize solution
 	// initialize solution
@@ -359,14 +361,14 @@ int MGSolver::saveToFile(std::string filename) const
 	std::ofstream gnuFile(filename);
 	if (gnuFile.is_open())
 	{
-		gnuFile << "# x y u(x,y)" << "\n";
-		for (int j = 0.5*(u->getSize(DIM_2D) - 1); j >= -0.5*(u->getSize(DIM_2D)-1); j--)
+	//	gnuFile << "# x y u(x,y)" << "\n";
+		for (int j = -0.5*(u->getSize(DIM_2D) - 1); j < 0.5*(u->getSize(DIM_2D)); j++)
 		{
 			for (int i = -0.5*(u->getSize(DIM_1D) - 1); i < 0.5*(u->getSize(DIM_1D)) ; i++)
 			{
 				gnuFile << (double) 2*i/(u->getSize(DIM_1D)-1) << " " << (double) 2*j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i + 0.5*(u->getSize(DIM_1D) - 1) , j + 0.5*(u->getSize(DIM_2D) - 1) ) << "\n";
 			}
-			gnuFile << "\n";
+	//		gnuFile << "\n";
 		}
 		gnuFile.close();
 		return 0;
