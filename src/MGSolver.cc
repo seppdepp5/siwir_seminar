@@ -15,7 +15,7 @@
 
 #define PRINT_ERROR (1)
 #define PRINT_RESIDUAL (1)
-#define LERROR 9.2e-5
+#define LERROR 9.18e-5
 
 	MGSolver::MGSolver ( int levels, Smoother & smoother )
 	: levels_ (levels)
@@ -64,12 +64,12 @@ void MGSolver::initialize_assignment_01 ()
 
 	Array * finest_grid = v_grids_.back();
 	real h              = h_intervals_.back();
-	int xleft = (finest_grid->getSize(DIM_1D)-1) * (-0.5);
-	int xright = (finest_grid->getSize(DIM_1D)-1) * 0.5;
-	int ydown = (finest_grid->getSize(DIM_2D)-1) * (-0.5);
-	int yup = (finest_grid->getSize(DIM_2D)-1) * 0.5;
-	int xsize =  (finest_grid->getSize(DIM_1D)-1) * 0.5;
-	int ysize =  (finest_grid->getSize(DIM_2D)-1) * 0.5;
+	int xleft = (finest_grid->getSize(DIM_1D)) * (-0.5);
+	int xright = (finest_grid->getSize(DIM_1D)) * 0.5;
+	int ydown = (finest_grid->getSize(DIM_2D)) * (-0.5);
+	int yup = (finest_grid->getSize(DIM_2D)) * 0.5;
+	int xsize =  (finest_grid->getSize(DIM_1D)) * 0.5;
+	int ysize =  (finest_grid->getSize(DIM_2D)) * 0.5;
 	double h2=h*2;
 
 	//bottom and upper
@@ -97,10 +97,12 @@ void MGSolver::initialize_assignment_01 ()
 	}
 
 
-	for(int col = 0; col <= xright; col++)
+	for(int col = 1; col <= xright; col++)
 	{
-		finest_grid->operator()(col + xsize, ysize) = 0.0;
+		int row = 0;
+		finest_grid->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 	}
+	finest_grid->operator()(xsize, ysize) = 0.0;
 
 	// initialize solution
 
@@ -121,18 +123,18 @@ void MGSolver::initialize_assignment_01 ()
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 {
 
-	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
-	int i = 0;
-	while(error > LERROR)
-//	for(int i = 1; i <= 10; i++)
+//	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
+//	int i = 0;
+//	while(error > LERROR)
+	for(int i = 1; i <= 18; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 #if PRINT_RESIDUAL
 		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
 		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
-		error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
-		i++;
+		real error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
+//		i++;
 #if PRINT_ERROR
 	std::cout << "Error: "  << error << std::endl;
 #endif
@@ -206,6 +208,7 @@ void MGSolver::error_correction(Array &u, Array &e_2h, int current_level)
 	{
 		for (int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			int mid_i = 2 * i;	
 			int mid_j = 2 * j;	
 
@@ -230,6 +233,7 @@ void MGSolver::error_correction(Array &u, Array &e_2h, int current_level)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			u(i, j) += e_h(i, j);
 		}
 	}
@@ -252,6 +256,7 @@ void MGSolver::compose_right_hand_side( Array &u, Array &f, Array &r_2h, int cur
 	{
 		for (int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			res(i, j) = f(i, j) - h_2_inv * ( 4.0 * u(i, j) - u(i, j+1) - u(i, j-1) - u(i-1, j) - u(i+1, j) );
 		}   
 	}
@@ -275,9 +280,10 @@ void MGSolver::restrict_2d (Stencil &rest, Array &u, Array &u_2h)
 	{
 		for(int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			int mid_i = 2*i;
 			int mid_j = 2*j;
-
+			
 			u_2h(i, j) = rest.getw1() * u(mid_i - 1, mid_j + 1) +
 				rest.getw1() * u(mid_i    , mid_j + 1) +
 				rest.getw3() * u(mid_i + 1, mid_j + 1) +
@@ -306,6 +312,7 @@ real MGSolver::residual_2d( Array &u, Array &f, real h)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			sum += pow(f(i, j) - h_2_inv * ( 4.0 * u(i, j) - u(i, j+1) - u(i, j-1) - u(i-1, j) - u(i+1, j) ), 2.0);
 		}   
 	}
@@ -325,6 +332,7 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
+			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			sum += pow(approximation(i,j) - solution(i,j), 2.0);
 		}   
 	}
