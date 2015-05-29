@@ -70,7 +70,8 @@ void MGSolver::initialize_assignment_01 ()
 	int yup = (finest_grid->getSize(DIM_2D)) * 0.5;
 	int xsize =  (finest_grid->getSize(DIM_1D)) * 0.5;
 	int ysize =  (finest_grid->getSize(DIM_2D)) * 0.5;
-	double h2=h*2;
+	real h2=h*2;
+	h = h*2;
 
 	//bottom and upper
 	for (int col = 0;col >= xleft;col--)
@@ -105,7 +106,6 @@ void MGSolver::initialize_assignment_01 ()
 	finest_grid->operator()(xsize, ysize) = 0.0;
 
 	// initialize solution
-	// initialize solution
 	int solleft = (solution_->getSize(DIM_1D)-1) * (-0.5);
 	int solright = (solution_->getSize(DIM_1D)-1) * 0.5;
 	int soldown = (solution_->getSize(DIM_2D)-1) * (-0.5);
@@ -124,6 +124,7 @@ void MGSolver::initialize_assignment_01 ()
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
+
 }
 
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
