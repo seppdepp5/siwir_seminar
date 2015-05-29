@@ -105,19 +105,25 @@ void MGSolver::initialize_assignment_01 ()
 	finest_grid->operator()(xsize, ysize) = 0.0;
 
 	// initialize solution
+	// initialize solution
+	int solleft = (solution_->getSize(DIM_1D)-1) * (-0.5);
+	int solright = (solution_->getSize(DIM_1D)-1) * 0.5;
+	int soldown = (solution_->getSize(DIM_2D)-1) * (-0.5);
+	int solup = (solution_->getSize(DIM_2D)-1) * 0.5;
+	int xsol = (solution_->getSize(DIM_1D)-1) * 0.5;
+	int ysol = (solution_->getSize(DIM_2D)-1) * 0.5;
 
 	//solution  im array
-	for (int row = ydown; row <= yup; row++)
+	for (int row = soldown; row <= solup; row++)
 	{
-		for (int col = xleft; col <= xright; col++)
+		for (int col = solleft; col <= solright; col++)
 		{
 			if(col == 0 && row == 0){ solution_->operator()(col+xsize,row+ysize) = 0.0; continue;}
-			solution_->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
+			solution_->operator()(col + xsol, row + ysol) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 			
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
-	
 }
 
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
