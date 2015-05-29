@@ -22,7 +22,7 @@ int main(int argc, char **args)
 	//	siwir::Timer ti;
 	//	double time;
 
-	struct timeval t0, t;
+//	struct timeval t0, t;
 
 	std::istringstream iss(args[1]);
 	if(!(iss >> l)){
@@ -37,7 +37,12 @@ int main(int argc, char **args)
 	MGSolver solver(l, smoother);
 
 	solver.initialize_assignment_01();
+	solver.saveToFile("init.dat");
 
+//	gettimeofday(&t0, NULL);
+
+	std::cout<<"Your Alias: "<<"alias"<<std::endl;
+	struct timeval t0, t;
 	gettimeofday(&t0, NULL);
 
 	solver.v_cycle(2, 1, n);
