@@ -106,7 +106,7 @@ void MGSolver::initialize_assignment_01 ()
 	finest_grid->operator()(xsize, ysize) = 0.0;
 	finest_grid->operator()(xsize, finest_grid->getSize(DIM_2D)-1) = 1/sqrt(2);
 	finest_grid->operator()(xsize, 0) = 1/sqrt(2);
-/*
+
 	// initialize solution
 	// initialize solution
 	int solleft	= (solution_->getSize(DIM_1D)-1) * (-0.5);
@@ -127,7 +127,7 @@ void MGSolver::initialize_assignment_01 ()
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
-*/
+
 }
 
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
@@ -136,12 +136,12 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 	//	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
 	//	int i = 0;
 	//	while(error > LERROR)
-	for(int i = 1; i <= 18; i++)
+	for(int i = 1; i <= 14; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 #if PRINT_RESIDUAL
-//		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
-//		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
+		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
+		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
 //		real error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
 		//		i++;
@@ -361,14 +361,14 @@ int MGSolver::saveToFile(std::string filename) const
 	std::ofstream gnuFile(filename);
 	if (gnuFile.is_open())
 	{
-	//	gnuFile << "# x y u(x,y)" << "\n";
+//		gnuFile << "# x y u(x,y)" << "\n";
 		for (int j = -0.5*(u->getSize(DIM_2D) - 1); j < 0.5*(u->getSize(DIM_2D)); j++)
 		{
 			for (int i = -0.5*(u->getSize(DIM_1D) - 1); i < 0.5*(u->getSize(DIM_1D)) ; i++)
 			{
 				gnuFile << (double) 2*i/(u->getSize(DIM_1D)-1) << " " << (double) 2*j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i + 0.5*(u->getSize(DIM_1D) - 1) , j + 0.5*(u->getSize(DIM_2D) - 1) ) << "\n";
 			}
-	//		gnuFile << "\n";
+//			gnuFile << "\n";
 		}
 		gnuFile.close();
 		return 0;

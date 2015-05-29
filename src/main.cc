@@ -41,7 +41,7 @@ int main(int argc, char **args)
 
 //	gettimeofday(&t0, NULL);
 
-	std::cout<<"Your Alias: "<<"alias"<<std::endl;
+	std::cout<<"Your Alias: "<< "David&Thomas" <<std::endl;
 	struct timeval t0, t;
 	gettimeofday(&t0, NULL);
 
