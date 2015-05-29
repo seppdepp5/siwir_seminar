@@ -75,25 +75,26 @@ void MGSolver::initialize_assignment_01 ()
 	//bottom and upper
 	for (int col = 0;col >= xleft;col--)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 	for (int col = 0;col <= xright;col++)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		//hier
+		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 
 	//left and right
 	for (int row = 0;row >= ydown;row--)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = 				-sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) =   -sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 	for (int row = 0;row <= yup;row++)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = 				sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) =   sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 
 
@@ -103,7 +104,7 @@ void MGSolver::initialize_assignment_01 ()
 		finest_grid->operator()(col + xsize, row + ysize) = 0.0;//sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 	}
 	finest_grid->operator()(xsize, ysize) = 0.0;
-
+/*
 	// initialize solution
 	// initialize solution
 	int solleft	= (solution_->getSize(DIM_1D)-1) * (-0.5);
@@ -124,6 +125,7 @@ void MGSolver::initialize_assignment_01 ()
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
+*/
 }
 
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
@@ -136,13 +138,13 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 #if PRINT_RESIDUAL
-		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
-		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
+//		real residual = residual_2d ( * v_grids_.back(), * r_grids_.back(), h_intervals_.back());
+//		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
-		real error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
+//		real error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
 		//		i++;
 #if PRINT_ERROR
-		std::cout << "Error: "  << error << std::endl;
+//		std::cout << "Error: "  << error << std::endl;
 #endif
 	}
 
