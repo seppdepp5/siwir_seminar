@@ -63,55 +63,55 @@ void MGSolver::initialize_assignment_01 ()
 	// bc is sin(x*pi) sinh(y*pi) which is only != 0 at the top boundary (y = 1)
 
 	Array * finest_grid = v_grids_.back();
-	real h              = h_intervals_.back();
-	int xleft = (finest_grid->getSize(DIM_1D)) * (-0.5);
-	int xright = (finest_grid->getSize(DIM_1D)) * 0.5;
-	int ydown = (finest_grid->getSize(DIM_2D)) * (-0.5);
-	int yup = (finest_grid->getSize(DIM_2D)) * 0.5;
-	int xsize =  (finest_grid->getSize(DIM_1D)) * 0.5;
-	int ysize =  (finest_grid->getSize(DIM_2D)) * 0.5;
-	double h2=h*2;
+	real h		= h_intervals_.back();
+	int xleft	= (finest_grid->getSize(DIM_1D)) * (-0.5);
+	int xright 	= (finest_grid->getSize(DIM_1D)) * 0.5;
+	int ydown 	= (finest_grid->getSize(DIM_2D)) * (-0.5);
+	int yup 	= (finest_grid->getSize(DIM_2D)) * 0.5;
+	int xsize 	= (finest_grid->getSize(DIM_1D)) * 0.5;
+	int ysize 	= (finest_grid->getSize(DIM_2D)) * 0.5;
+	double h2	= h*2;
 
 	//bottom and upper
 	for (int col = 0;col >= xleft;col--)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 	for (int col = 0;col <= xright;col++)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
-		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 
 	//left and right
 	for (int row = 0;row >= ydown;row--)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h2*row*h2 + 1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 	for (int row = 0;row <= yup;row++)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 + (1/sqrt(row*h2*row*h2 + 1))));
-		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sqrt(0.5*(1 - (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 
 
 	for(int col = 1; col <= xright; col++)
 	{
 		int row = 0;
-		finest_grid->operator()(col + xsize, row + ysize) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
+		finest_grid->operator()(col + xsize, row + ysize) = 0.0;//sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
 	}
 	finest_grid->operator()(xsize, ysize) = 0.0;
 
 	// initialize solution
 	// initialize solution
-	int solleft = (solution_->getSize(DIM_1D)-1) * (-0.5);
-	int solright = (solution_->getSize(DIM_1D)-1) * 0.5;
-	int soldown = (solution_->getSize(DIM_2D)-1) * (-0.5);
-	int solup = (solution_->getSize(DIM_2D)-1) * 0.5;
-	int xsol = (solution_->getSize(DIM_1D)-1) * 0.5;
-	int ysol = (solution_->getSize(DIM_2D)-1) * 0.5;
+	int solleft	= (solution_->getSize(DIM_1D)-1) * (-0.5);
+	int solright	= (solution_->getSize(DIM_1D)-1) * 0.5;
+	int soldown	= (solution_->getSize(DIM_2D)-1) * (-0.5);
+	int solup 	= (solution_->getSize(DIM_2D)-1) * 0.5;
+	int xsol 	= (solution_->getSize(DIM_1D)-1) * 0.5;
+	int ysol 	= (solution_->getSize(DIM_2D)-1) * 0.5;
 
 	//solution  im array
 	for (int row = soldown; row <= solup; row++)
@@ -119,8 +119,8 @@ void MGSolver::initialize_assignment_01 ()
 		for (int col = solleft; col <= solright; col++)
 		{
 			if(col == 0 && row == 0){ solution_->operator()(col+xsize,row+ysize) = 0.0; continue;}
-			solution_->operator()(col + xsol, row + ysol) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sqrt(0.5*(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
-			
+			solution_->operator()(col + xsol, row + ysol) = sqrt(sqrt(row*h2*row*h2 + col*h2*col*h2)) * sin(0.5*atan2(row*h2,col*h2));//(1 - (col*h2/sqrt(col*h2*col*h2 + row*h2*row*h2))));
+
 			//sin(PI * (real) col * h) * sinh(PI * (real) row * h);	
 		}
 	}
@@ -129,9 +129,9 @@ void MGSolver::initialize_assignment_01 ()
 void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 {
 
-//	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
-//	int i = 0;
-//	while(error > LERROR)
+	//	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
+	//	int i = 0;
+	//	while(error > LERROR)
 	for(int i = 1; i <= 18; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
@@ -140,9 +140,9 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 		std::cout << "Residual (cylcle no " << i + 1 << "):  " << residual << std::endl;
 #endif
 		real error = error_L2 ( * v_grids_.back(), * solution_, h_intervals_.back());
-//		i++;
+		//		i++;
 #if PRINT_ERROR
-	std::cout << "Error: "  << error << std::endl;
+		std::cout << "Error: "  << error << std::endl;
 #endif
 	}
 
@@ -289,7 +289,7 @@ void MGSolver::restrict_2d (Stencil &rest, Array &u, Array &u_2h)
 			if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 			int mid_i = 2*i;
 			int mid_j = 2*j;
-			
+
 			u_2h(i, j) = rest.getw1() * u(mid_i - 1, mid_j + 1) +
 				rest.getw1() * u(mid_i    , mid_j + 1) +
 				rest.getw3() * u(mid_i + 1, mid_j + 1) +
@@ -351,7 +351,7 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 int MGSolver::saveToFile(std::string filename) const
 {
 	Array *u = v_grids_.back();
-//	Array *u = solution_;
+	//	Array *u = solution_;
 	//	std::cout << "width: " << u->getSize(DIM_1D) << std::endl;
 
 	std::ofstream gnuFile(filename);
