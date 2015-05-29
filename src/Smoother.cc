@@ -2,6 +2,7 @@
 #include "Types.hh"
 #include "Array.hh"
 #include "MGSolver.hh"
+#include <omp.h>
 
 void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this array
 		Array & f,    // rhs
@@ -22,7 +23,8 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 
 	for (int iter = 0; iter < times; iter++)
 	{
-		// red points
+		// red pointsi
+#pragma omp parallel for
 		for (int j = 1; j < height-1; j++)
 		{
 			for (int i = 1; i < width-1; i++)
@@ -35,7 +37,7 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 				}
 			}
 		}
-
+#pragma omp parallel for
 		// black points
 		for (int j = 1; j < height-1; j++)
 		{

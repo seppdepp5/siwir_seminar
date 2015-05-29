@@ -1,5 +1,5 @@
 CC      = /usr/bin/g++
-CFLAGS  = -O3 -Wall -Winline -Wshadow -std=c++11
+CFLAGS  = -O3 -Wall -Winline -Wshadow -std=c++11 -fopenmp -lpthread
 LDFLAGS = #-lm -pthread
 OBJDIR = ./objects
 SRCDIR = ./src/
