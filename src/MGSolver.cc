@@ -75,24 +75,24 @@ void MGSolver::initialize_assignment_01 ()
 	//bottom and upper
 	for (int col = 0;col >= xleft;col--)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
 		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 	for (int col = 0;col <= xright;col++)
 	{
-		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
+		finest_grid->operator()(col + xsize, 0) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(-1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ) );
 		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) = sqrt(sqrt(1 + col*h2*col*h2)) * sin(0.5*atan2(1,col*h2));//(1 - (col*h2 / sqrt(col*h2*col*h2 + 1) ) ));
 	}
 
 	//left and right
 	for (int row = 0;row >= ydown;row--)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
 		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 	for (int row = 0;row <= yup;row++)
 	{
-		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
+		finest_grid->operator()(0,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,-1));//(1 + (1/sqrt(row*h2*row*h2 + 1))));
 		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) = sqrt(sqrt(row*row*h2*h2 + 1)) * sin(0.5*atan2(row*h2,1));//(1 - (1/sqrt(row*h2*row*h2 + 1))));
 	}
 
