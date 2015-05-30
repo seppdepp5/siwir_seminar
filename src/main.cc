@@ -17,13 +17,6 @@ int main(int argc, char **args)
 	int n;
 	n = 10;
 
-	//TODO kein festes n sondern if Abfrage, ob es kleiner ist als gegebenes Residuum
-	//time
-	//	siwir::Timer ti;
-	//	double time;
-
-//	struct timeval t0, t;
-
 	std::istringstream iss(args[1]);
 	if(!(iss >> l)){
 		std::cerr << "Could not parse number of level argument: " << args[1] << std::endl;
