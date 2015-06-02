@@ -51,5 +51,5 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 				}
 			}
 		}
-	}
+	} 
 }
