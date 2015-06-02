@@ -13,6 +13,9 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 	int width  = u.getSize(DIM_1D);
 	int height = u.getSize(DIM_2D);
 
+//TODO
+//da ist doch die if oder??
+
 	real h_2     = h * h;
 	real h_2_inv = 1.0 / h_2;
 	real factor  = h_2 * 0.25;
