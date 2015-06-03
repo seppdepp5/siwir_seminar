@@ -29,10 +29,10 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 		{
 			for (int i = 1; i < width-1; i++)
 			{
-				if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 				// inner domain
 				// i+j gerade
 				if( ((i + j) % 2) == 0){
+					if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 					u(i,j) = factor * (f(i,j) + h_2_inv * ( u(i-1, j) + u(i+1, j) + u(i, j+1) + u(i, j-1)));
 				}
 			}
@@ -43,10 +43,10 @@ void Smoother::smooth_red_black_gauss_seidel_2d ( Array & u,    // modify this a
 		{
 			for (int i = 1; i < width-1; i++)
 			{
-				if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 				// inner domain
 				// i+j ungerade
 				if( ((i + j) % 2) == 1){
+					if(j == (height-1)*0.5 && i >= (width-1)*0.5) continue;
 					u(i,j) = factor * (f(i,j) + h_2_inv * ( u(i-1, j) + u(i+1, j) + u(i, j+1) + u(i, j-1)));
 				}
 			}
