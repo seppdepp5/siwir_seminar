@@ -122,8 +122,8 @@ int Array::getSize() const
    return size_;
 
 }
-
-real& Array::operator ()(int i,int j)
+/*
+inline real& Array::operator ()(int i,int j)
 {
 
    //static double dummy;
@@ -133,4 +133,4 @@ real& Array::operator ()(int i,int j)
    return ar[xSize_*j + i];
 
 }
-
+*/

@@ -20,7 +20,7 @@ public:
    Array& operator= (const Array& s);
 
    // Access Operators
-   real & operator () ( int i ,int j );
+   inline real & operator () ( int i ,int j );
 
    // initialize the whole array with a constant value
    void fill( real value );
@@ -52,5 +52,17 @@ private:
    real *ar;
 
 };
+
+inline real& Array::operator ()(int i,int j)
+{
+
+   //static double dummy;
+ //   CHECK_MSG(i >= 0 && i < xSize_, "Index i out of bounds");
+ //   CHECK_MSG(j >= 0 && j < ySize_, "Index j out of bounds");
+//    CHECK_MSG(dimension_ == DIM_2D, "Wrong dimension.");
+   return ar[xSize_*j + i];
+
+}
+
 
 #endif //ARRAY_HH

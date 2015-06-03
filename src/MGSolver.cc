@@ -366,7 +366,7 @@ int MGSolver::saveToFile(std::string filename) const
 			{
 				gnuFile << (double) 2*i/(u->getSize(DIM_1D)-1) << " " << (double) 2*j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i + 0.5*(u->getSize(DIM_1D) - 1) , j + 0.5*(u->getSize(DIM_2D) - 1) ) << "\n";
 			}
-	//		gnuFile << "\n";
+			gnuFile << "\n";
 		}
 		gnuFile.close();
 		return 0;
