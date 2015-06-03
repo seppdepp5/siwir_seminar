@@ -73,13 +73,14 @@ void MGSolver::initialize_assignment_01 ()
 	int ysize 	= (finest_grid->getSize(DIM_2D)) * 0.5;
 
 	//bottom and upper
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int col = -1;col >= xleft;col--)
 	{
 		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h*col*h)) * sin(0.5*atan2(-1,(col*h)));
 		finest_grid->operator()(col + xsize, finest_grid->getSize(DIM_2D)-1) =  sqrt(sqrt(1 + col*h*col*h)) * sin(0.5*atan2(1,(col*h)));
+
 	}
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int col = 1;col <= xright;col++)
 	{
 		finest_grid->operator()(col + xsize, 0) = 				-sqrt(sqrt(1 + col*h*col*h)) * sin(0.5*atan2(-1,(col*h)));
@@ -87,21 +88,21 @@ void MGSolver::initialize_assignment_01 ()
 	}
 
 	//left and right
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int row = 0;row >= ydown;row--)
 	{
 		finest_grid->operator()(0,row + ysize) = 				-sqrt(sqrt(row*row*h*h + 1)) * sin(0.5*atan2(row*h,-1));
 		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) =   -sqrt(sqrt(row*row*h*h + 1)) * sin(0.5*atan2(row*h,1));
 	}
-	#pragma omp parallel for
+
+#pragma omp parallel for
 	for (int row = 0;row <= yup;row++)
 	{
 		finest_grid->operator()(0,row + ysize) = 				sqrt(sqrt(row*row*h*h + 1)) * sin(0.5*atan2(row*h,-1));
 		finest_grid->operator()(finest_grid->getSize(DIM_1D)-1,row + ysize) =   sqrt(sqrt(row*row*h*h + 1)) * sin(0.5*atan2(row*h,1));
 	}
 
-
-	#pragma omp parallel for
+#pragma omp parallel for
 	for(int col = 1; col <= xright; col++)
 	{
 		finest_grid->operator()(col + xsize, ysize) = 0.0;
@@ -203,7 +204,7 @@ void MGSolver::error_correction(Array &u, Array &e_2h, int current_level)
 	Stencil rest(0.25, 0.5, 0.25, 0.5, 1.0, 0.5, 0.25, 0.5, 0.25);
 	
 	// calculate I * e_2h (error to finer grid)
-	#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 	for (int j = 1; j < height-1; j++)
 	{
 		for (int i = 1; i < width-1; i++)
@@ -230,7 +231,7 @@ void MGSolver::error_correction(Array &u, Array &e_2h, int current_level)
 	width  = u.getSize(DIM_1D);
 	height = u.getSize(DIM_2D);
 
-	#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
@@ -253,7 +254,7 @@ void MGSolver::compose_right_hand_side( Array &u, Array &f, Array &r_2h, int cur
 	int height = u.getSize(DIM_2D);
 
 	// calculate f - Au
-	#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 	for (int j = 1; j < height-1; j++)
 	{
 		for (int i = 1; i < width-1; i++)
@@ -278,7 +279,7 @@ void MGSolver::restrict_2d (Stencil &rest, Array &u, Array &u_2h)
 	int height = u_2h.getSize(DIM_2D);
 
 	// restrict to coarser domain
-	#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 	for(int j = 1; j < height-1; j++)
 	{
 		for(int i = 1; i < width-1; i++)
@@ -312,7 +313,7 @@ real MGSolver::residual_2d( Array &u, Array &f, real h)
 	int height = u.getSize(DIM_2D);
 
 	// add up squares of the entries of the residual
-	#pragma omp parallel for schedule(static) reduction(+:sum)
+#pragma omp parallel for schedule(static) reduction(+:sum)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
@@ -334,7 +335,7 @@ real MGSolver::error_L2( Array &approximation, Array &solution, real h)
 	int height = approximation.getSize(DIM_2D);
 
 	// add up squares of the entries of the residual
-	#pragma omp parallel for schedule(static) reduction(+:sum)
+#pragma omp parallel for schedule(static) reduction(+:sum)
 	for (int j = 1; j < height-1; j++) {
 		for (int i = 1; i < width-1; i++)
 		{   
