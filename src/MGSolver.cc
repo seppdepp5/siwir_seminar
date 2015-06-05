@@ -138,7 +138,7 @@ void MGSolver::v_cycle( int pre_smooth, int post_smooth, int times)
 {
 
 	//	real error = error_L2 ( * v_grids_.back(), * solution_,	h_intervals_.back());
-	for(int i = 1; i <= 13; i++)
+	for(int i = 1; i <= 9; i++)
 	{
 		v_cycle_pvt (pre_smooth, post_smooth, levels_);
 	}
@@ -366,7 +366,7 @@ int MGSolver::saveToFile(std::string filename) const
 			{
 				gnuFile << (double) 2*i/(u->getSize(DIM_1D)-1) << " " << (double) 2*j/(u->getSize(DIM_2D)-1) << " " << u->operator()(i + 0.5*(u->getSize(DIM_1D) - 1) , j + 0.5*(u->getSize(DIM_2D) - 1) ) << "\n";
 			}
-			gnuFile << "\n";
+//			gnuFile << "\n";
 		}
 		gnuFile.close();
 		return 0;
